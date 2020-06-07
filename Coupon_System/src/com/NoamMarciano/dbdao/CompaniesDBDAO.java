@@ -106,8 +106,8 @@ public class CompaniesDBDAO implements CompaniesDAO {
 
 			String sql = "SELECT * FROM `coupon_system`.`companies`";
 			// STEP 3
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(sql);
+			PreparedStatement statement = connection.prepareStatement(sql);
+			ResultSet resultSet = statement.executeQuery();
 
 			// STEP 4
 			while (resultSet.next()) {
@@ -135,8 +135,8 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			String sql = "SELECT name, email, password"
 					+ "  FROM `coupon_system`.`companies`";
 			// STEP 3
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(sql);
+			PreparedStatement statement = connection.prepareStatement(sql);
+			ResultSet resultSet = statement.executeQuery();
 
 			// STEP 4
 			while (resultSet.next()) {

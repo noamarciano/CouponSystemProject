@@ -17,7 +17,7 @@ public interface CustomerDAO {
 	
 	List<Customer> getAllCustomers();
 	
-	Customer getOneCompany(int customerID);
+	Customer getOneCustomer(int customerID);
 	
 	
 	

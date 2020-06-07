@@ -15,8 +15,29 @@ public class CustomerDBDAO implements CustomerDAO {
 
 	@Override
 	public boolean isCustomerExists(String email, String Password) {
-		// TODO Auto-generated method stub
+		Connection connection = null;
+		try {
+			// STEP 2
+			connection = ConnectionPool.getInstance().getConnection();
+
+			String sql = "SELECT * FROM `coupon_system`.`customers` WHERE email = ? AND password = ?";
+
+			// STEP 3
+			PreparedStatement statement = connection.prepareStatement(sql);
+			ResultSet resultSet = statement.executeQuery();
+			
+			// STEP 4
+			if (resultSet.next()) {
+				return true;
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			ConnectionPool.getInstance().returnConnection(connection);
+		}
+
 		return false;
+
 	}
 
 	@Override
@@ -103,8 +124,8 @@ public class CustomerDBDAO implements CustomerDAO {
 
 			String sql = "SELECT * FROM `coupon_system`.`customers`";
 			// STEP 3
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(sql);
+			PreparedStatement statement = connection.prepareStatement(sql);
+			ResultSet resultSet = statement.executeQuery();
 
 			// STEP 4
 			while (resultSet.next()) {
@@ -125,7 +146,7 @@ public class CustomerDBDAO implements CustomerDAO {
 	}
 
 	@Override
-	public Customer getOneCompany(int customerID) {
+	public Customer getOneCustomer(int customerID) {
 		// TODO Auto-generated method stub
 		return null;
 	}
