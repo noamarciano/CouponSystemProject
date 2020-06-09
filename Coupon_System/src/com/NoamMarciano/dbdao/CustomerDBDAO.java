@@ -13,9 +13,11 @@ import com.NoamMarciano.utils.ConnectionPool;
 
 public class CustomerDBDAO implements CustomerDAO {
 
+	Connection connection = null;
+	
 	@Override
 	public boolean isCustomerExists(String email, String Password) {
-		Connection connection = null;
+		
 		try {
 			// STEP 2
 			connection = ConnectionPool.getInstance().getConnection();
@@ -42,7 +44,7 @@ public class CustomerDBDAO implements CustomerDAO {
 
 	@Override
 	public void addCustomer(Customer customer) {
-		Connection connection = null;
+
 		try {
 			connection = ConnectionPool.getInstance().getConnection();
 			String sql = "INSERT INTO `coupon_system`.`customers` (id,firstName,lastName,email,password) VALUES (?,?,?,?,?)";
@@ -65,8 +67,7 @@ public class CustomerDBDAO implements CustomerDAO {
 
 	@Override
 	public void updateCustomer(Customer customer) {
-		Connection connection = null;
-
+	
 		try {
 			// STEP 2
 			connection = ConnectionPool.getInstance().getConnection();
@@ -92,7 +93,7 @@ public class CustomerDBDAO implements CustomerDAO {
 
 	@Override
 	public void deleteCustomer(Customer customer) {
-		Connection connection = null;
+
 		try {
 
 			// STEP 2
@@ -116,7 +117,6 @@ public class CustomerDBDAO implements CustomerDAO {
 	@Override
 	public List<Customer> getAllCustomers() {
 		List<Customer> customers = new ArrayList<Customer>();
-		Connection connection = null;
 
 		try {
 			// STEP 2

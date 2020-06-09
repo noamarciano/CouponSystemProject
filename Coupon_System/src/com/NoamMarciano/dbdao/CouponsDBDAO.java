@@ -26,14 +26,14 @@ public class CouponsDBDAO implements CouponsDAO {
 			// STEP 3
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, coupon.getCompanyID());
-//			statement.setInt(3, coupon.getCategoryID());
+			statement.setString(2, coupon.getCategory().toString());
 			statement.setString(3, coupon.getTitle());
 			statement.setString(4, coupon.getDescription());
 			statement.setDate(5, (Date) coupon.getStartDate());
 			statement.setDate(6, (Date) coupon.getEndDate());
 			statement.setInt(7, coupon.getAmount());
 			statement.setDouble(8, coupon.getPrice());
-//			statement.setString(9, coupon.getImage());
+			statement.setString(9, coupon.getImage());
 			statement.executeUpdate();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

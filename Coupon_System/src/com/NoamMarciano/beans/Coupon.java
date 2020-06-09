@@ -18,6 +18,19 @@ public class Coupon {
 	public Coupon() {
 	}
 
+	public Coupon(int companyID, Category category, String title, String description, Date startDate, Date endDate,
+			int amount, double price, String image) {
+		this.companyID = companyID;
+		this.category = category;
+		this.title = title;
+		this.description = description;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.amount = amount;
+		this.price = price;
+		this.image = image;
+	}
+
 	public Coupon(int id, int companyID, Category category, String title, String description, Date startDate,
 			Date endDate, int amount, double price, String image) {
 		this.id = id;

@@ -1,7 +1,11 @@
 package Test;
-import java.sql.SQLException;
 
+import java.sql.SQLException;
+import java.util.Date;
+
+import com.NoamMarciano.beans.Category;
 import com.NoamMarciano.beans.Company;
+import com.NoamMarciano.beans.Coupon;
 import com.NoamMarciano.dbdao.CompaniesDBDAO;
 import com.NoamMarciano.utils.ConnectionPool;
 import com.NoamMarciano.utils.Database;
@@ -15,10 +19,7 @@ public class Test {
 		Class.forName("com.mysql.cj.jdbc.Driver");
 //		CompaniesDBDAO myUserDBDAO = new CompaniesDBDAO();
 		Database.createAllTabales();
-		
-		
-		
-		
+
 //		Database.createTableCompanies();
 //
 //		Company u1 = new Company(1, "Zara", "zara@zara.com", "1234", null);
