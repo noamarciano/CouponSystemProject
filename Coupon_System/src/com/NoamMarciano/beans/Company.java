@@ -14,6 +14,20 @@ public class Company {
 	public Company() {
 	}
 
+	public Company(int id, String name, String email, String password) {
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+	}
+
+	public Company(String name, String email, String password, List<Coupon> coupons) {
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.coupons = coupons;
+	}
+
 	public Company(int id, String name, String email, String password, List<Coupon> coupons) {
 		this.id = id;
 		this.name = name;
