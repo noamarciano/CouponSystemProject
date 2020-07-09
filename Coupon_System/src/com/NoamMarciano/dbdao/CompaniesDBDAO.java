@@ -15,7 +15,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 
 	private static final String CREATE_METHOD_IS_COMPANY_EXISTS = "SELECT * FROM `coupon_system`.`companies` WHERE email = ? AND password = ?";
 	private static final String CREATE_METHOD_ADD_COMPANY = "INSERT INTO `coupon_system`.`companies` (`Name`, `Email`, `Password`) VALUES (?, ?, ?)";
-	private static final String CREATE_METHOD_UPDATE_COMPANY = "UPDATE `coupon_system`.`companies` SET `Name`=?, `Email`=?, `Password`=? WHERE `ID`=?";
+	private static final String CREATE_METHOD_UPDATE_COMPANY = "UPDATE `coupon_system`.`companies` SET `Email` = ?, `Password` = ? WHERE (`ID` = ?);";
 	private static final String CREATE_METHOD_DELETE_COMPANY = "DELETE FROM `coupon_system`.`companies` WHERE `ID`=?";
 	private static final String CREATE_METHOD_GET_ALL_COMPANIES = "SELECT * FROM `coupon_system`.`companies`";
 	private static final String CREATE_METHOD_GET_ONE_COMPANY = "SELECT * FROM `coupon_system`.`companies` WHERE `ID` = ?";
@@ -71,7 +71,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 	}
 
 	@Override
-	public void updateCompany(int companyID, Company company) {
+	public void updateCompany(Company company) {
 
 		try {
 			// STEP 2
@@ -81,10 +81,9 @@ public class CompaniesDBDAO implements CompaniesDAO {
 
 			// STEP 3
 			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setString(1, company.getName());
-			statement.setString(2, company.getEmail());
-			statement.setString(3, company.getPassword());
-			statement.setInt(4, companyID);
+			statement.setString(1, company.getEmail());
+			statement.setString(2, company.getPassword());
+			statement.setInt(3, company.getId());
 
 			statement.executeUpdate();
 		} catch (Exception e) {

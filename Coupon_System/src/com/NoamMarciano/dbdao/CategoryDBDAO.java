@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import com.NoamMarciano.beans.Category;
 import com.NoamMarciano.dao.CategoryDAO;
 import com.NoamMarciano.utils.ConnectionPool;
+
 import java.sql.Connection;
 
 public class CategoryDBDAO implements CategoryDAO {

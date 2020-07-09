@@ -14,6 +14,10 @@ public interface CouponsDAO {
 	
 	List<Coupon> getAllCoupons();
 	
+	List<Coupon> getAllCouponsByCompanyID(int companyID);
+	
+	List<Coupon> getAllCouponsByCustumerID(int customerID);
+	
 	Coupon getOneCoupon(int couponID);
 	
 	void addCouponPurchase(int customerID, int couponID);

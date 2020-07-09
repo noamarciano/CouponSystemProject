@@ -15,10 +15,10 @@ public class CustomerDBDAO implements CustomerDAO {
 
 	private static final String CREATE_METHOD_IS_CUSTOMER_EXISTS = "SELECT * FROM `coupon_system`.`customers` WHERE email = ? AND password = ?";
 	private static final String CREATE_METHOD_ADD_CUSTOMER = "INSERT INTO `coupon_system`.`customers` (`First_Name`, `Last_Name`, `Email`, `Password`) VALUES (?, ?, ?, ?);";
-	
+
 	private static final String CREATE_METHOD_UPDATE_CUSTOMER = "UPDATE `coupon_system`.`customers` SET `First_Name`=?,"
-																+ " `Last_Name`=?, `Email`=?, `Password`=? WHERE `ID`=?";
-	
+			+ " `Last_Name`=?, `Email`=?, `Password`=? WHERE `ID`=?";
+
 	private static final String CREATE_METHOD_DELETE_CUSTOMER = "DELETE FROM `coupon_system`.`customers` WHERE `ID`=?";
 	private static final String CREATE_METHOD_GET_ALL_CUSTOMER = "SELECT * FROM `coupon_system`.`customers`";
 	private static final String CREATE_METHOD_GET_ONE_CUSTOMER = "SELECT * FROM `coupon_system`.`customers` WHERE `ID` = ?";
@@ -61,7 +61,6 @@ public class CustomerDBDAO implements CustomerDAO {
 
 			// STEP 3
 			PreparedStatement statement = connection.prepareStatement(sql);
-//			statement.setInt(1, customer.getId());
 			statement.setString(1, customer.getFirstName());
 			statement.setString(2, customer.getLastName());
 			statement.setString(3, customer.getEmail());
