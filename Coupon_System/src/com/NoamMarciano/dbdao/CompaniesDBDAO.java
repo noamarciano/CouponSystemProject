@@ -8,14 +8,14 @@ import java.sql.ResultSet;
 
 import com.NoamMarciano.beans.Company;
 import com.NoamMarciano.dao.CompaniesDAO;
-import com.NoamMarciano.utils.ConnectionPool;
+import com.NoamMarciano.data.ConnectionPool;
 
 public class CompaniesDBDAO implements CompaniesDAO {
 	private static Connection connection = null;
 
 	private static final String CREATE_METHOD_IS_COMPANY_EXISTS = "SELECT * FROM `coupon_system`.`companies` WHERE email = ? AND password = ?";
 	private static final String CREATE_METHOD_ADD_COMPANY = "INSERT INTO `coupon_system`.`companies` (`Name`, `Email`, `Password`) VALUES (?, ?, ?)";
-	private static final String CREATE_METHOD_UPDATE_COMPANY = "UPDATE `coupon_system`.`companies` SET `Email` = ?, `Password` = ? WHERE (`ID` = ?);";
+	private static final String CREATE_METHOD_UPDATE_COMPANY = "UPDATE `coupon_system`.`companies` SET `Email`=?, `Password`=? WHERE (`ID`=?)";
 	private static final String CREATE_METHOD_DELETE_COMPANY = "DELETE FROM `coupon_system`.`companies` WHERE `ID`=?";
 	private static final String CREATE_METHOD_GET_ALL_COMPANIES = "SELECT * FROM `coupon_system`.`companies`";
 	private static final String CREATE_METHOD_GET_ONE_COMPANY = "SELECT * FROM `coupon_system`.`companies` WHERE `ID` = ?";
@@ -45,6 +45,11 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
 
+		if (flag == true) {
+			System.out.println("This comapny exist..");
+		} else {
+			System.out.println("This company doesn't exist..");
+		}
 		return flag;
 	}
 
@@ -114,7 +119,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
-
+		System.out.println("This company has been deleted..");
 	}
 
 	@Override

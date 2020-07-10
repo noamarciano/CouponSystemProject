@@ -6,8 +6,8 @@ import java.util.List;
 import com.NoamMarciano.beans.Company;
 import com.NoamMarciano.beans.Coupon;
 import com.NoamMarciano.beans.Customer;
+import com.NoamMarciano.exception.CannotUpdateException;
 import com.NoamMarciano.exception.CompanyAlreadyExistException;
-import com.NoamMarciano.exception.CompanyDoesNotExistException;
 import com.NoamMarciano.exception.EmailAlreadyExistException;
 import com.NoamMarciano.exception.LoginDeniedException;
 
@@ -24,20 +24,29 @@ public class AdminFacade extends ClientFacade {
 		return false;
 	}
 
-	public void addCompany(Company company) throws CompanyAlreadyExistException {
+	public void addCompany(Company company) {
 		List<Company> companies = companiesDBDAO.getAllCompanies();
-		for (Company c : companies) {
-			if (c.getEmail().equals(company.getEmail()) || c.getName().equals(company.getName())) {
-				throw new CompanyAlreadyExistException();
+
+		try {
+			for (Company c : companies) {
+				if (c.getEmail().equals(company.getEmail()) || c.getName().equals(company.getName())) {
+					throw new CompanyAlreadyExistException();
+				}
 			}
+		} catch (CompanyAlreadyExistException e) {
+			System.out.println(e.getMessage());
 		}
 		companiesDBDAO.addCompany(company);
 	}
 
 //	NEED TO FIX !!
 	public void updateCompany(Company company) {
-
-		companiesDBDAO.updateCompany(company);
+		try {
+			companiesDBDAO.updateCompany(company);
+			throw new CannotUpdateException();
+		} catch (CannotUpdateException e) {
+			System.out.println(e.getMessage());
+		}
 
 	}
 
@@ -57,17 +66,30 @@ public class AdminFacade extends ClientFacade {
 	}
 
 	public Company getOneCompany(int companyID) {
-		return companiesDBDAO.getOneCompany(companyID);
+		if (companiesDBDAO.getOneCompany(companyID) != null) {
+			return companiesDBDAO.getOneCompany(companyID);
+		} else {
+			System.out.println("This company doesn't exist..");
+			
+		}
+		return null;
 	}
 
 	public void addCustomer(Customer customer) throws EmailAlreadyExistException {
 		List<Customer> customers = customerDBDAO.getAllCustomers();
-		for (Customer c : customers) {
-			if (c.getEmail().equals(customer.getEmail())) {
-				throw new EmailAlreadyExistException();
+
+		try {
+			for (Customer c : customers) {
+				if (c.getEmail().equals(customer.getEmail())) {
+					throw new EmailAlreadyExistException();
+				} else {
+					customerDBDAO.addCustomer(customer);
+				}
 			}
+		} catch (EmailAlreadyExistException e) {
+			System.out.println(e.getMessage());
 		}
-		customerDBDAO.addCustomer(customer);
+
 	}
 
 	public void updateCustomer(Customer customer) {

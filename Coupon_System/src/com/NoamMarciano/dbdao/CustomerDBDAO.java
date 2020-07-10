@@ -8,13 +8,13 @@ import java.util.List;
 
 import com.NoamMarciano.beans.Customer;
 import com.NoamMarciano.dao.CustomerDAO;
-import com.NoamMarciano.utils.ConnectionPool;
+import com.NoamMarciano.data.ConnectionPool;
 
 public class CustomerDBDAO implements CustomerDAO {
 	private static Connection connection = null;
 
 	private static final String CREATE_METHOD_IS_CUSTOMER_EXISTS = "SELECT * FROM `coupon_system`.`customers` WHERE email = ? AND password = ?";
-	private static final String CREATE_METHOD_ADD_CUSTOMER = "INSERT INTO `coupon_system`.`customers` (`First_Name`, `Last_Name`, `Email`, `Password`) VALUES (?, ?, ?, ?);";
+	private static final String CREATE_METHOD_ADD_CUSTOMER = "INSERT INTO `coupon_system`.`customers` (`First_Name`, `Last_Name`, `Email`, `Password`) VALUES (?, ?, ?, ?)";
 
 	private static final String CREATE_METHOD_UPDATE_CUSTOMER = "UPDATE `coupon_system`.`customers` SET `First_Name`=?,"
 			+ " `Last_Name`=?, `Email`=?, `Password`=? WHERE `ID`=?";
@@ -46,6 +46,12 @@ public class CustomerDBDAO implements CustomerDAO {
 			System.out.println(e.getMessage());
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
+		}
+
+		if (flag == true) {
+			System.out.println("This customer exist..");
+		} else {
+			System.out.println("This customer doesn't exist..");
 		}
 
 		return flag;
@@ -120,7 +126,7 @@ public class CustomerDBDAO implements CustomerDAO {
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
-
+		System.out.println("This customer has been deleted..");
 	}
 
 	@Override
@@ -150,7 +156,6 @@ public class CustomerDBDAO implements CustomerDAO {
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
-
 		return customers;
 	}
 
@@ -184,7 +189,6 @@ public class CustomerDBDAO implements CustomerDAO {
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
-
 		return customer;
 	}
 

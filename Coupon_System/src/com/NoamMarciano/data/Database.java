@@ -1,4 +1,4 @@
-package com.NoamMarciano.utils;
+package com.NoamMarciano.data;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -1,6 +1,10 @@
-package com.NoamMarciano.facade;
+package com.NoamMarciano.security;
 
 import com.NoamMarciano.exception.LoginDeniedException;
+import com.NoamMarciano.facade.AdminFacade;
+import com.NoamMarciano.facade.ClientFacade;
+import com.NoamMarciano.facade.CompanyFacade;
+import com.NoamMarciano.facade.CustomerFacade;
 
 public class LoginManager {
 
@@ -29,14 +33,17 @@ public class LoginManager {
 		switch (clientType) {
 		case Administrator:
 			adminFacade.login(email, password);
+			System.out.println("Admin Facade - Login successful");
 			return adminFacade;
 
 		case Company:
 			companyFacade.login(email, password);
+			System.out.println("Company Facade - Login successful");
 			return companyFacade;
 
 		case Customer:
 			customerFacade.login(email, password);
+			System.out.println("Customer Facade - Login successful");
 			return customerFacade;
 		default:
 			System.out.println("One or more details are wrong, please try again..");
