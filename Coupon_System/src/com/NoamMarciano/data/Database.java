@@ -9,7 +9,7 @@ public class Database {
 	private static final String url = "jdbc:mysql://localhost:3306/coupon_system?createDatabaseIfNotExist=TRUE&useTimezone=TRUE&serverTimezone=UTC";
 	private static final String username = "root";
 	private static final String password = "1234";
-	
+
 	public static String getUrl() {
 		return url;
 	}
@@ -55,13 +55,11 @@ public class Database {
 	private static final String DROP_TABLE_COMPANIES = "DROP TABLE `coupon_system`.`companies`;";
 	private static final String DROP_TABLE_CATEGORIES = "DROP TABLE `coupon_system`.`categories`;";
 	private static final String DROP_SCHEMA = "DROP DATABASE `coupon_system`;";
-	
+
 	private static final String INSERT_TABLE_CATEGORIES_FOOD = "INSERT INTO `coupon_system`.`categories` (`Name`) VALUES ('Food');";
 	private static final String INSERT_TABLE_CATEGORIES_ELECTRICITY = "INSERT INTO `coupon_system`.`categories` (`Name`) VALUES ('Electricity');";
 	private static final String INSERT_TABLE_CATEGORIES_RESTAURANT = "INSERT INTO `coupon_system`.`categories` (`Name`) VALUES ('Restaurant');";
 	private static final String INSERT_TABLE_CATEGORIES_VACATION = "INSERT INTO `coupon_system`.`categories` (`Name`) VALUES ('Vacation');";
-	
-	
 
 	public static void createAllTabales() throws SQLException {
 		createSchema();
@@ -105,19 +103,19 @@ public class Database {
 			// STEP 3
 			PreparedStatement statment = connection.prepareStatement(sql);
 			statment.executeUpdate();
-			
+
 			sql = INSERT_TABLE_CATEGORIES_FOOD;
 			statment = connection.prepareStatement(sql);
 			statment.executeUpdate();
-			
+
 			sql = INSERT_TABLE_CATEGORIES_ELECTRICITY;
 			statment = connection.prepareStatement(sql);
 			statment.executeUpdate();
-			
+
 			sql = INSERT_TABLE_CATEGORIES_RESTAURANT;
 			statment = connection.prepareStatement(sql);
 			statment.executeUpdate();
-			
+
 			sql = INSERT_TABLE_CATEGORIES_VACATION;
 			statment = connection.prepareStatement(sql);
 			statment.executeUpdate();
@@ -131,7 +129,7 @@ public class Database {
 		}
 
 	}
-	
+
 	private static void createTableCompanies() throws SQLException {
 
 		try {
@@ -220,7 +218,6 @@ public class Database {
 
 	}
 
-	
 	public static void dropAllTabales() throws SQLException {
 		dropTableCustomers_vs_coupons();
 		dropTableCoupons();
@@ -229,7 +226,7 @@ public class Database {
 		dropTableCategories();
 		dropSchema();
 	}
-	
+
 	private static void dropTableCustomers_vs_coupons() throws SQLException {
 
 		try {
@@ -251,7 +248,7 @@ public class Database {
 		}
 
 	}
-	
+
 	private static void dropTableCoupons() throws SQLException {
 
 		try {
@@ -273,7 +270,7 @@ public class Database {
 		}
 
 	}
-	
+
 	private static void dropTableCustomers() throws SQLException {
 
 		try {
@@ -339,7 +336,7 @@ public class Database {
 		}
 
 	}
-	
+
 	private static void dropSchema() {
 		try {
 			// STEP 2
@@ -361,15 +358,5 @@ public class Database {
 
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 }

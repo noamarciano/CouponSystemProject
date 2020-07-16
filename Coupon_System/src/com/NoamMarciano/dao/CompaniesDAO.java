@@ -9,13 +9,13 @@ public interface CompaniesDAO {
 	boolean isCompanyExists(String email, String Password);
 
 	void addCompany(Company company);
-	
-	void updateCompany(Company company);
-	
+
+	void updateCompany(int companyID, Company company);
+
 	void deleteCompany(int companyID);
-	
+
 	List<Company> getAllCompanies();
-	
+
 	Company getOneCompany(int companyID);
-	
+
 }

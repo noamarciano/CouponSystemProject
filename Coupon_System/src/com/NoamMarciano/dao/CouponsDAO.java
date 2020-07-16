@@ -8,9 +8,9 @@ public interface CouponsDAO {
 
 	void addCoupon(Coupon coupon);
 	
-	void updateCoupon(Coupon coupon);
+	void updateCoupon(int couponID, Coupon coupon);
 	
-	void deleteCoupon(Coupon coupon);
+	void deleteCoupon(int couponID);
 	
 	List<Coupon> getAllCoupons();
 	

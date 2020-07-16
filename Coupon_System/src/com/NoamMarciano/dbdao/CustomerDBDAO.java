@@ -47,15 +47,7 @@ public class CustomerDBDAO implements CustomerDAO {
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
-
-		if (flag == true) {
-			System.out.println("This customer exist..");
-		} else {
-			System.out.println("This customer doesn't exist..");
-		}
-
 		return flag;
-
 	}
 
 	@Override
@@ -72,6 +64,7 @@ public class CustomerDBDAO implements CustomerDAO {
 			statement.setString(3, customer.getEmail());
 			statement.setString(4, customer.getPassword());
 			statement.executeUpdate();
+			System.out.println("Add customer successful!");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
@@ -98,6 +91,7 @@ public class CustomerDBDAO implements CustomerDAO {
 			statement.setInt(5, customerID);
 
 			statement.executeUpdate();
+			System.out.println("Update customer ("+customerID+") successful!");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
@@ -120,13 +114,12 @@ public class CustomerDBDAO implements CustomerDAO {
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, customerID);
 			statement.executeUpdate();
-
+			System.out.println("Customer (" + customerID + ") has been deleted..");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
-		System.out.println("This customer has been deleted..");
 	}
 
 	@Override

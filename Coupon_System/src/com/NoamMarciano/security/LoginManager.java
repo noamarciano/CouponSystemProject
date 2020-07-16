@@ -9,6 +9,7 @@ import com.NoamMarciano.facade.CustomerFacade;
 public class LoginManager {
 
 	private static LoginManager instance = null;
+	private ClientFacade clientFacade;
 
 	private LoginManager() {
 
@@ -26,26 +27,38 @@ public class LoginManager {
 	}
 
 	public ClientFacade login(String email, String password, ClientType clientType) throws LoginDeniedException {
-		AdminFacade adminFacade = new AdminFacade();
-		CompanyFacade companyFacade = new CompanyFacade();
-		CustomerFacade customerFacade = new CustomerFacade();
+//		AdminFacade adminFacade = new AdminFacade();
+//		CompanyFacade companyFacade = new CompanyFacade();
+//		CustomerFacade customerFacade = new CustomerFacade();
 
 		switch (clientType) {
 		case Administrator:
-			adminFacade.login(email, password);
-			System.out.println("Admin Facade - Login successful");
-			return adminFacade;
-
+			clientFacade = (ClientFacade) new AdminFacade();
+			if (clientFacade.login(email, password)) {
+				System.out.println("Admin Facade - Login successful");
+				return clientFacade;
+			} else {
+				return null;
+			}
 		case Company:
-			companyFacade.login(email, password);
-			System.out.println("Company Facade - Login successful");
-			return companyFacade;
+			clientFacade = (ClientFacade) new CompanyFacade();
+			if (clientFacade.login(email, password)) {
+				System.out.println("Company Facade - Login successful");
+				return clientFacade;
+			} else {
+				return null;
+			}
 
 		case Customer:
-			customerFacade.login(email, password);
-			System.out.println("Customer Facade - Login successful");
-			return customerFacade;
+			clientFacade = (ClientFacade) new CustomerFacade();
+			if (clientFacade.login(email, password)) {
+				System.out.println("Cuatomer Facade - Login successful");
+				return clientFacade;
+			} else {
+				return null;
+			}
 		default:
+			clientFacade = null;
 			System.out.println("One or more details are wrong, please try again..");
 			break;
 		}

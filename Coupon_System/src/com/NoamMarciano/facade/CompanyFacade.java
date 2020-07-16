@@ -6,6 +6,7 @@ import java.util.List;
 import com.NoamMarciano.beans.Category;
 import com.NoamMarciano.beans.Company;
 import com.NoamMarciano.beans.Coupon;
+import com.NoamMarciano.exception.CannotUpdateException;
 import com.NoamMarciano.exception.CouponTitleAlreadyExistException;
 import com.NoamMarciano.exception.LoginDeniedException;
 
@@ -14,6 +15,7 @@ public class CompanyFacade extends ClientFacade {
 	private int companyID;
 
 	public CompanyFacade() {
+		super();
 	}
 
 	public int getCompanyID() {
@@ -27,24 +29,27 @@ public class CompanyFacade extends ClientFacade {
 	@Override
 	public boolean login(String email, String password) throws LoginDeniedException {
 		if (companiesDBDAO.isCompanyExists(email, password)) {
-			System.out.println("Company Login successful!");
 			return true;
+		} else {
+			throw new LoginDeniedException();
 		}
-		throw new LoginDeniedException();
 	}
 
 	public void addCoupon(Coupon coupon) throws CouponTitleAlreadyExistException {
-		List<Coupon> coupons = couponsDBDAO.getAllCoupons();
+		List<Coupon> coupons = couponsDBDAO.getAllCouponsByCompanyID(companyID);
 		for (Coupon c : coupons) {
-			if (c.getCompanyID() == coupon.getCompanyID()) {
+			if (c.getTitle().equalsIgnoreCase(coupon.getTitle())) {
 				throw new CouponTitleAlreadyExistException();
 			}
 		}
 		couponsDBDAO.addCoupon(coupon);
 	}
 
-	public void updateCoupon(Coupon coupon) {
-		couponsDBDAO.updateCoupon(coupon);
+	public void updateCoupon(Coupon coupon) throws CannotUpdateException {
+		if (companyID != coupon.getCompanyID()) {
+			throw new CannotUpdateException();
+		}
+		couponsDBDAO.updateCoupon(coupon.getId(), coupon);
 	}
 
 	public void deleteCoupon(int couponID) {
@@ -52,16 +57,22 @@ public class CompanyFacade extends ClientFacade {
 		for (Coupon c : coupons) {
 			if (c.getId() == couponID) {
 				couponsDBDAO.deleteCouponPurchase(c.getCompanyID(), couponID);
-				couponsDBDAO.deleteCoupon(c);
+				couponsDBDAO.deleteCoupon(couponID);
+				return;
 			}
 		}
+		System.out.println("Not found matching coupons");
 	}
 
-	public ArrayList<Coupon> getCompanyCoupons() {
-		return (ArrayList<Coupon>) couponsDBDAO.getAllCouponsByCompanyID(companyID);
+	public List<Coupon> getCompanyCoupons() {
+		if (couponsDBDAO.getAllCouponsByCompanyID(companyID) != null) {
+			return couponsDBDAO.getAllCouponsByCompanyID(companyID);
+		}
+		System.out.println("This company doesn't have any coupons..");
+		return null;
 	}
 
-	public ArrayList<Coupon> getCompanyCoupons(Category category) {
+	public ArrayList<Coupon> getCompanyCouponsByCategory(Category category) {
 		List<Coupon> coupons = couponsDBDAO.getAllCouponsByCompanyID(companyID);
 		ArrayList<Coupon> couponsByCategory = new ArrayList<>();
 		for (Coupon c : coupons) {
@@ -72,23 +83,27 @@ public class CompanyFacade extends ClientFacade {
 		return couponsByCategory;
 	}
 
-	public ArrayList<Coupon> getCompanyCoupons(double maxPrice) {
+	public ArrayList<Coupon> getCompanyCouponsByMaxPrice(double maxPrice) {
 		List<Coupon> coupons = couponsDBDAO.getAllCouponsByCompanyID(companyID);
 		ArrayList<Coupon> couponsByPrice = new ArrayList<>();
 		for (Coupon c : coupons) {
-			if (c.getPrice() < maxPrice) {
+			if (c.getPrice() <= maxPrice) {
 				couponsByPrice.add(c);
 			}
 		}
 		return couponsByPrice;
+
 	}
 
 	public Company getCompanyDetails() {
 		Company company = companiesDBDAO.getOneCompany(companyID);
-		if (company != null) {
-			company.getCoupons();
+		try {
+			company.setCoupons(getCompanyCoupons());
+			return company;
+		} catch (Exception e) {
+			System.out.println("This company doesn't have coupons..");
 		}
-		return company;
+		return null;
 
 	}
 

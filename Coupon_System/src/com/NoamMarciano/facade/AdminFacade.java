@@ -14,51 +14,53 @@ import com.NoamMarciano.exception.LoginDeniedException;
 public class AdminFacade extends ClientFacade {
 
 	public AdminFacade() {
+		super();
 	}
 
 	@Override
 	public boolean login(String email, String password) throws LoginDeniedException {
-		if ("admin@admin.com".equals(email) && "admin".equals(password)) {
+		if (email.equals("admin@admin.com") && password.equals("admin")) {
 			return true;
 		}
-		return false;
+		throw new LoginDeniedException();
 	}
 
-	public void addCompany(Company company) {
+	public void addCompany(Company company) throws CompanyAlreadyExistException {
 		List<Company> companies = companiesDBDAO.getAllCompanies();
-
-		try {
-			for (Company c : companies) {
-				if (c.getEmail().equals(company.getEmail()) || c.getName().equals(company.getName())) {
-					throw new CompanyAlreadyExistException();
-				}
+		for (Company c : companies) {
+			if (c.getEmail().equals(company.getEmail()) || c.getName().equals(company.getName())) {
+				throw new CompanyAlreadyExistException();
 			}
-		} catch (CompanyAlreadyExistException e) {
-			System.out.println(e.getMessage());
 		}
 		companiesDBDAO.addCompany(company);
 	}
 
-//	NEED TO FIX !!
-	public void updateCompany(Company company) {
-		try {
-			companiesDBDAO.updateCompany(company);
-			throw new CannotUpdateException();
-		} catch (CannotUpdateException e) {
-			System.out.println(e.getMessage());
-		}
+	public void updateCompany(int companyID, Company company) throws CannotUpdateException {
 
+		if (company.getId() == companyID) {
+			companiesDBDAO.updateCompany(companyID, company);
+			return;
+		}
+		throw new CannotUpdateException();
 	}
 
 	public void deleteCompany(int companyID) {
-		List<Coupon> coupons = couponsDBDAO.getAllCoupons();
+		List<Coupon> coupons = couponsDBDAO.getAllCouponsByCompanyID(companyID);
+		List<Company> companies = companiesDBDAO.getAllCompanies();
 		for (Coupon c : coupons) {
-			if (c.getCompanyID() == companyID) {
+			if (coupons != null) {
 				couponsDBDAO.deleteCouponPurchase(companyID, c.getId());
-				couponsDBDAO.deleteCoupon(c);
+				couponsDBDAO.deleteCoupon(c.getId());
 			}
 		}
-		companiesDBDAO.deleteCompany(companyID);
+		for (Company company : companies) {
+			if (company.getId() == companyID) {
+				companiesDBDAO.deleteCompany(companyID);
+				return;
+			}
+		}
+		System.out.println("Sorry, There is no company with this ID (" + companyID + ") ");
+
 	}
 
 	public ArrayList<Company> getAllCompanies() {
@@ -70,26 +72,19 @@ public class AdminFacade extends ClientFacade {
 			return companiesDBDAO.getOneCompany(companyID);
 		} else {
 			System.out.println("This company doesn't exist..");
-			
+
 		}
 		return null;
 	}
 
 	public void addCustomer(Customer customer) throws EmailAlreadyExistException {
 		List<Customer> customers = customerDBDAO.getAllCustomers();
-
-		try {
-			for (Customer c : customers) {
-				if (c.getEmail().equals(customer.getEmail())) {
-					throw new EmailAlreadyExistException();
-				} else {
-					customerDBDAO.addCustomer(customer);
-				}
+		for (Customer c : customers) {
+			if (c.getEmail().equals(customer.getEmail())) {
+				throw new EmailAlreadyExistException();
 			}
-		} catch (EmailAlreadyExistException e) {
-			System.out.println(e.getMessage());
 		}
-
+		customerDBDAO.addCustomer(customer);
 	}
 
 	public void updateCustomer(Customer customer) {
@@ -100,7 +95,7 @@ public class AdminFacade extends ClientFacade {
 		List<Coupon> coupons = couponsDBDAO.getAllCoupons();
 		for (Coupon c : coupons) {
 			if (c.getCompanyID() == customerID) {
-				couponsDBDAO.deleteCoupon(c);
+				couponsDBDAO.deleteCoupon(c.getId());
 				couponsDBDAO.deleteCouponPurchase(customerID, c.getId());
 			}
 		}
@@ -112,7 +107,12 @@ public class AdminFacade extends ClientFacade {
 	}
 
 	public Customer getOneCustomer(int customerID) {
-		return customerDBDAO.getOneCustomer(customerID);
+		if (customerDBDAO.getOneCustomer(customerID) != null) {
+			return customerDBDAO.getOneCustomer(customerID);
+		} else {
+			System.out.println("This customer doesn't exist..");
+		}
+		return null;
 	}
 
 }

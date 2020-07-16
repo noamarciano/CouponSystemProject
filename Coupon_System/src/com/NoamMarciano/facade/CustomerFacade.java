@@ -1,56 +1,89 @@
 package com.NoamMarciano.facade;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.NoamMarciano.beans.Category;
 import com.NoamMarciano.beans.Coupon;
 import com.NoamMarciano.beans.Customer;
-import com.NoamMarciano.exception.CouponAlreadyPurchasedException;
-import com.NoamMarciano.exception.CouponNotAvailableException;
+import com.NoamMarciano.beans.CustomerVsCoupon;
 import com.NoamMarciano.exception.LoginDeniedException;
+import com.NoamMarciano.exception.PurchasedCouponException;
 
 public class CustomerFacade extends ClientFacade {
 
 	private int customerID;
 
 	public CustomerFacade() {
+		super();
+	}
+
+	public int getCustomerID() {
+		return customerID;
+	}
+
+	public void setCustomerID(int customerID) {
+		this.customerID = customerID;
 	}
 
 	@Override
 	public boolean login(String email, String password) throws LoginDeniedException {
 		if (customerDBDAO.isCustomerExists(email, password)) {
-			System.out.println("Login successful!");
 			return true;
 		}
 		throw new LoginDeniedException();
 
 	}
 
-	public void purchaseCoupon(Coupon coupon) throws CouponAlreadyPurchasedException, CouponNotAvailableException {
-		List<Coupon> coupons = couponsDBDAO.getAllCouponsByCustumerID(customerID);
+	public void purchaseCoupon(Coupon coupon) throws PurchasedCouponException {
+
+		if (coupon == null) {
+			throw new PurchasedCouponException("This coupon does not exist");
+		} else if (couponsDBDAO.getOneCoupon(coupon.getId()) == null) {
+			throw new PurchasedCouponException("This id does not exist");
+		}
+
+		// You can't purchase coupon more than once
+		List<Coupon> coupons = getCustomerCoupons();
+		if (coupons != null) {
 			for (Coupon c : coupons) {
 				if (coupon.getId() == c.getId()) {
-					throw new CouponAlreadyPurchasedException();
-				} else if (coupon.getAmount() < 1) {
-					throw new CouponNotAvailableException();
+					throw new PurchasedCouponException("Coupon already purchased by this customer");
 				}
 			}
+		}
+
+		// You cna't purchase coupon when amount=0
+
+		Coupon couponFromDB = couponsDBDAO.getOneCoupon(coupon.getId());
+		if (couponFromDB.getAmount() <= 0) {
+			throw new PurchasedCouponException("Sorry, Coupon amount is less then 1");
+		}
+
+		// you can't purchase coupon when date is expired
+		if (couponFromDB.getEndDate().before(new Date())) {
+			throw new PurchasedCouponException("You can't purchase coupon when date is expired");
+		}
+		System.out.println(couponFromDB);
+		couponFromDB.setAmount(couponFromDB.getAmount() - 1);
+		System.out.println(couponFromDB);
+		couponsDBDAO.updateCoupon(couponFromDB.getId(), couponFromDB);
 		couponsDBDAO.addCouponPurchase(customerID, coupon.getId());
-		coupon.setAmount(coupon.getAmount() - 1);
 
 	}
 
-	public ArrayList<Coupon> getCustomerCoupons() {
-		try {
-			return (ArrayList<Coupon>) couponsDBDAO.getAllCouponsByCustumerID(customerID);
-		} catch (Exception e) {
+	public List<Coupon> getCustomerCoupons() {
+		if (couponsDBDAO.getAllCouponsByCustumerID(customerID) != null) {
+			return couponsDBDAO.getAllCouponsByCustumerID(customerID);
+		} else {
 			System.out.println("This customer doesn't have coupons..");
 		}
 		return null;
 	}
 
-	public ArrayList<Coupon> getCustomerCoupons(Category category) {
+	public ArrayList<Coupon> getCustomerCouponsByCategory(Category category) {// TODO need to throw exception + maxPrice
+																				// + ID
 
 		List<Coupon> coupons = new ArrayList<>();
 		List<Coupon> couponsByCategory = new ArrayList<>();
@@ -63,12 +96,12 @@ public class CustomerFacade extends ClientFacade {
 			}
 			return (ArrayList<Coupon>) couponsByCategory;
 		} catch (Exception e) {
-			System.out.println("This customer doesn't have coupons..");
+			System.out.println("This customer doesn't have coupons with this category..");
 		}
 		return null;
 	}
 
-	public ArrayList<Coupon> getCustomerCoupons(double maxPrice) {
+	public ArrayList<Coupon> getCustomerCouponsByMaxPrice(double maxPrice) {
 		List<Coupon> coupons = new ArrayList<>();
 		List<Coupon> couponsByPrice = new ArrayList<>();
 		try {
@@ -88,8 +121,7 @@ public class CustomerFacade extends ClientFacade {
 
 	public Customer getCustomerDetails() {
 
-		Customer customer;
-		customer = customerDBDAO.getOneCustomer(customerID);
+		Customer customer = customerDBDAO.getOneCustomer(customerID);
 		try {
 			customer.setCoupons(getCustomerCoupons());
 			return customer;

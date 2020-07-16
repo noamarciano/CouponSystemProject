@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import com.NoamMarciano.beans.Company;
+import com.NoamMarciano.beans.Coupon;
 import com.NoamMarciano.dao.CompaniesDAO;
 import com.NoamMarciano.data.ConnectionPool;
 
@@ -45,11 +46,6 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
 
-		if (flag == true) {
-			System.out.println("This comapny exist..");
-		} else {
-			System.out.println("This company doesn't exist..");
-		}
 		return flag;
 	}
 
@@ -66,7 +62,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			statement.setString(3, company.getPassword());
 
 			statement.executeUpdate();
-
+			System.out.println("Add company successful!");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
@@ -75,8 +71,8 @@ public class CompaniesDBDAO implements CompaniesDAO {
 
 	}
 
-	@Override
-	public void updateCompany(Company company) {
+	@Override // Changed the request and add companyID
+	public void updateCompany(int companyID, Company company) {
 
 		try {
 			// STEP 2
@@ -88,9 +84,10 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, company.getEmail());
 			statement.setString(2, company.getPassword());
-			statement.setInt(3, company.getId());
+			statement.setInt(3, companyID);
 
 			statement.executeUpdate();
+			System.out.println("Update company (" + companyID + ") successful!");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
@@ -113,13 +110,14 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, companyID);
 			statement.executeUpdate();
+			System.out.println("Company (" + companyID + ") has been deleted..");
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
-		System.out.println("This company has been deleted..");
+
 	}
 
 	@Override
@@ -173,7 +171,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 				String name = resultSet.getString(2);
 				String email = resultSet.getString(3);
 				String password = resultSet.getString(4);
-				company = new Company(companyID, name, email, password);
+				company = new Company(companyID, name, email, password, new ArrayList<Coupon>());
 
 			}
 		} catch (Exception e) {
