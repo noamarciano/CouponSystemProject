@@ -8,7 +8,7 @@ import com.NoamMarciano.beans.Customer;
 import com.NoamMarciano.dao.CouponsDAO;
 import com.NoamMarciano.dbdao.CouponsDBDAO;
 
-public class DailyJob implements Runnable {
+public class DailyJob extends Thread {
 
 	private CouponsDAO couponsDAO;
 
@@ -24,8 +24,8 @@ public class DailyJob implements Runnable {
 		while (!quit) {
 			List<Coupon> coupons = couponsDAO.getAllCoupons();
 			for (Coupon coupon : coupons) {
-				if (coupon.getEndDate().before(new Date(System.currentTimeMillis()))) {
-//					couponsDAO.deleteCouponPurchase(customerID, couponID); TODO need to find the customer id
+				if (coupon.getEndDate().before(new Date())) {
+					couponsDAO.deleteCouponPurchaseByCouponID(coupon.getId());
 					couponsDAO.deleteCoupon(coupon.getId());
 				}
 			}

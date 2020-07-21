@@ -45,7 +45,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
-
+		connection = null;
 		return flag;
 	}
 
@@ -69,10 +69,11 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
 
+		connection = null;
 	}
 
-	@Override // Changed the request and add companyID
-	public void updateCompany(int companyID, Company company) {
+	@Override
+	public void updateCompany(Company company) {
 
 		try {
 			// STEP 2
@@ -84,16 +85,16 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, company.getEmail());
 			statement.setString(2, company.getPassword());
-			statement.setInt(3, companyID);
+			statement.setInt(3, company.getId());
 
 			statement.executeUpdate();
-			System.out.println("Update company (" + companyID + ") successful!");
+			System.out.println("Update company successful!");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
-
+		connection = null;
 	}
 
 	@Override
@@ -110,14 +111,14 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, companyID);
 			statement.executeUpdate();
-			System.out.println("Company (" + companyID + ") has been deleted..");
+			System.out.println("Company has been deleted..");
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
-
+		connection = null;
 	}
 
 	@Override
@@ -146,7 +147,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
-
+		connection = null;
 		return companies;
 	}
 
@@ -179,7 +180,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
-
+		connection = null;
 		return company;
 	}
 

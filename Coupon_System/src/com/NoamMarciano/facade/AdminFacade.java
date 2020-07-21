@@ -38,7 +38,7 @@ public class AdminFacade extends ClientFacade {
 	public void updateCompany(int companyID, Company company) throws CannotUpdateException {
 
 		if (company.getId() == companyID) {
-			companiesDBDAO.updateCompany(companyID, company);
+			companiesDBDAO.updateCompany(company);
 			return;
 		}
 		throw new CannotUpdateException();
@@ -88,7 +88,7 @@ public class AdminFacade extends ClientFacade {
 	}
 
 	public void updateCustomer(Customer customer) {
-		customerDBDAO.updateCustomer(1, customer);
+		customerDBDAO.updateCustomer(customer);
 	}
 
 	public void deleteCustomer(int customerID) {

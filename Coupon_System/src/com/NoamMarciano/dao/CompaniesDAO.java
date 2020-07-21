@@ -10,7 +10,7 @@ public interface CompaniesDAO {
 
 	void addCompany(Company company);
 
-	void updateCompany(int companyID, Company company);
+	void updateCompany(Company company);
 
 	void deleteCompany(int companyID);
 

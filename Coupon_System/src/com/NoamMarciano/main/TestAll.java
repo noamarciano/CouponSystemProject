@@ -1,8 +1,6 @@
 package com.NoamMarciano.main;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import com.NoamMarciano.beans.Category;
 import com.NoamMarciano.beans.Company;
@@ -68,7 +66,7 @@ public class TestAll {
 		CheckTitle.printTestLine("update company");
 		c2.setPassword("4321");
 		c2.setEmail("samsung1111@company.com");
-		companiesDBDAO.updateCompany(2, c2);
+		companiesDBDAO.updateCompany(c2);
 		CheckTitle.printOneCompany(companiesDBDAO.getOneCompany(2));
 
 		CheckTitle.printTestLine("delete company");
@@ -122,7 +120,7 @@ public class TestAll {
 		CheckTitle.printTestLine("update customer");
 		cu2.setPassword("4321");
 		cu2.setFirstName("Eliyahu");
-		customerDBDAO.updateCustomer(2, cu2);
+		customerDBDAO.updateCustomer(cu2);
 		CheckTitle.printOneCustomer(customerDBDAO.getOneCustomer(2));
 
 		CheckTitle.printTestLine("delete customer");
@@ -185,7 +183,7 @@ public class TestAll {
 		CheckTitle.printTestLine("update coupon");
 		cou2.setAmount(200);
 		cou2.setPrice(79);
-		couponsDBDAO.updateCoupon(2, cou2);
+		couponsDBDAO.updateCoupon(cou2);
 		CheckTitle.printOneCoupon(couponsDBDAO.getOneCoupon(2));
 
 		CheckTitle.printTestLine("delete coupon");
@@ -536,13 +534,13 @@ public class TestAll {
 		} catch (LoginDeniedException e) {
 			System.out.println(e.getMessage());
 		}
-		customerFacade.setCustomerID(2);
+		customerFacade.setCustomerID(3);
 
 		CheckTitle.printTestLine("Customer Facade - purchase coupon");// TODO need to fix the purchase method instead of
 																		// customer id it brings the company id
 
 		try {
-			Coupon coupon = couponsDBDAO.getOneCoupon(2);
+			Coupon coupon = couponsDBDAO.getOneCoupon(5);
 			CheckTitle.printOneCoupon(coupon);
 
 			customerFacade.purchaseCoupon(coupon);

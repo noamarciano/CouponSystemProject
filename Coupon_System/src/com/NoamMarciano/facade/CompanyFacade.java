@@ -49,7 +49,7 @@ public class CompanyFacade extends ClientFacade {
 		if (companyID != coupon.getCompanyID()) {
 			throw new CannotUpdateException();
 		}
-		couponsDBDAO.updateCoupon(coupon.getId(), coupon);
+		couponsDBDAO.updateCoupon(coupon);
 	}
 
 	public void deleteCoupon(int couponID) {

@@ -47,6 +47,7 @@ public class CustomerDBDAO implements CustomerDAO {
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
+		connection = null;
 		return flag;
 	}
 
@@ -71,10 +72,11 @@ public class CustomerDBDAO implements CustomerDAO {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
 
+		connection = null;
 	}
 
 	@Override
-	public void updateCustomer(int customerID, Customer customer) {
+	public void updateCustomer(Customer customer) {
 
 		try {
 			// STEP 2
@@ -88,16 +90,16 @@ public class CustomerDBDAO implements CustomerDAO {
 			statement.setString(2, customer.getLastName());
 			statement.setString(3, customer.getEmail());
 			statement.setString(4, customer.getPassword());
-			statement.setInt(5, customerID);
+			statement.setInt(5, customer.getId());
 
 			statement.executeUpdate();
-			System.out.println("Update customer ("+customerID+") successful!");
+			System.out.println("Update customer successful!");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
-
+		connection = null;
 	}
 
 	@Override
@@ -114,12 +116,13 @@ public class CustomerDBDAO implements CustomerDAO {
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, customerID);
 			statement.executeUpdate();
-			System.out.println("Customer (" + customerID + ") has been deleted..");
+			System.out.println("Customer has been deleted..");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
+		connection = null;
 	}
 
 	@Override
@@ -149,6 +152,7 @@ public class CustomerDBDAO implements CustomerDAO {
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
+		connection = null;
 		return customers;
 	}
 
@@ -182,6 +186,7 @@ public class CustomerDBDAO implements CustomerDAO {
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
+		connection = null;
 		return customer;
 	}
 

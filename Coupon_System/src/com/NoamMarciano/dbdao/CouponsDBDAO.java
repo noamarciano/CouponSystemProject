@@ -30,6 +30,7 @@ public class CouponsDBDAO implements CouponsDAO {
 
 	private static final String CREATE_METHOD_ADD_COUPON_PURCHASE = "INSERT INTO `coupon_system`.`customers_vs_coupons` (`Customer_ID`, `Coupon_ID`) VALUES (?, ?);";
 	private static final String CREATE_METHOD_DELETE_COUPON_PURCHASE = "DELETE FROM `coupon_system`.`customers_vs_coupons` WHERE `Customer_ID` = ? AND `Coupon_ID` = ?";
+	private static final String CREATE_METHOD_DELETE_COUPON_PURCHASE_BY_COUPONID = "DELETE FROM `coupon_system`.`customers_vs_coupons` WHERE `Coupon_ID` = ?";
 
 	@Override
 	public void addCoupon(Coupon coupon) {
@@ -57,10 +58,11 @@ public class CouponsDBDAO implements CouponsDAO {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
 
+		connection = null;
 	}
 
 	@Override
-	public void updateCoupon(int couponID, Coupon coupon) {
+	public void updateCoupon(Coupon coupon) {
 
 		try {
 			// STEP 2
@@ -78,14 +80,15 @@ public class CouponsDBDAO implements CouponsDAO {
 			statement.setInt(5, coupon.getAmount());
 			statement.setDouble(6, coupon.getPrice());
 			statement.setString(7, coupon.getImage());
-			statement.setInt(8, couponID);
+			statement.setInt(8, coupon.getId());
 			statement.executeUpdate();
-			System.out.println("Update coupon (" + couponID + ") successful!");
+			System.out.println("Update coupon successful!");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
+		connection = null;
 
 	}
 
@@ -103,13 +106,14 @@ public class CouponsDBDAO implements CouponsDAO {
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, couponID);
 			statement.executeUpdate();
-			System.out.println("Coupon (" + couponID + ") has been deleted..");
+			System.out.println("Coupon has been deleted..");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
 
+		connection = null;
 	}
 
 	@Override
@@ -144,6 +148,7 @@ public class CouponsDBDAO implements CouponsDAO {
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
+		connection = null;
 		return coupons;
 	}
 
@@ -185,6 +190,7 @@ public class CouponsDBDAO implements CouponsDAO {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
 
+		connection = null;
 		return null;
 	}
 
@@ -199,12 +205,14 @@ public class CouponsDBDAO implements CouponsDAO {
 			statement.setInt(1, customerID);
 			statement.setInt(2, couponID);
 			statement.executeUpdate();
-			System.out.println("Coupon (" + couponID + ") purchased successfuly!");
+			System.out.println("Coupon purchased successfuly!");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
+
+		connection = null;
 
 	}
 
@@ -228,6 +236,31 @@ public class CouponsDBDAO implements CouponsDAO {
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
+
+		connection = null;
+	}
+
+	@Override
+	public void deleteCouponPurchaseByCouponID(int couponID) {
+		try {
+
+			// STEP 2
+			connection = ConnectionPool.getInstance().getConnection();
+
+			String sql = CREATE_METHOD_DELETE_COUPON_PURCHASE_BY_COUPONID;
+
+			// STEP 3
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setInt(1, couponID);
+			statement.executeUpdate();
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			ConnectionPool.getInstance().returnConnection(connection);
+		}
+
+		connection = null;
 
 	}
 
@@ -264,6 +297,7 @@ public class CouponsDBDAO implements CouponsDAO {
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
+		connection = null;
 		return coupons;
 	}
 
@@ -282,7 +316,7 @@ public class CouponsDBDAO implements CouponsDAO {
 			List<Integer> nums = new ArrayList<>();
 			// STEP 4
 			while (resultSet.next()) {
-				nums.add(resultSet.getInt(1));
+				nums.add(resultSet.getInt(2));
 			}
 			if (nums != null) {
 				for (int i = 0; i < nums.size(); i++) {
@@ -312,7 +346,7 @@ public class CouponsDBDAO implements CouponsDAO {
 		} finally {
 			ConnectionPool.getInstance().returnConnection(connection);
 		}
-
+		connection = null;
 		return coupons;
 	}
 

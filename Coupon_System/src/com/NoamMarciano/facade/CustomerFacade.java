@@ -54,21 +54,21 @@ public class CustomerFacade extends ClientFacade {
 			}
 		}
 
-		// You cna't purchase coupon when amount=0
+		// You can't purchase coupon when amount=0
 
-		Coupon couponFromDB = couponsDBDAO.getOneCoupon(coupon.getId());
-		if (couponFromDB.getAmount() <= 0) {
+		
+		if (coupon.getAmount() <= 0) {
 			throw new PurchasedCouponException("Sorry, Coupon amount is less then 1");
 		}
 
 		// you can't purchase coupon when date is expired
-		if (couponFromDB.getEndDate().before(new Date())) {
+		if (coupon.getEndDate().before(new Date())) {
 			throw new PurchasedCouponException("You can't purchase coupon when date is expired");
 		}
-		System.out.println(couponFromDB);
-		couponFromDB.setAmount(couponFromDB.getAmount() - 1);
-		System.out.println(couponFromDB);
-		couponsDBDAO.updateCoupon(couponFromDB.getId(), couponFromDB);
+//		System.out.println(couponFromDB);
+		coupon.setAmount(coupon.getAmount() - 1);
+//		System.out.println(couponFromDB);
+		couponsDBDAO.updateCoupon(coupon);
 		couponsDBDAO.addCouponPurchase(customerID, coupon.getId());
 
 	}
